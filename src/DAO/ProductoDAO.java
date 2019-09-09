@@ -70,14 +70,14 @@ public class ProductoDAO{
 /*Metodo Modificar*/
     public void Modificar_ProductoVO(ProductoVO vo){
         Conectar conec = new Conectar();
-        String sql = "UPDATE productos SET descripcion = ? WHERE id = ?;";
+        String sql = "UPDATE productos SET descripcion=?, precio=?, stock=? WHERE id=?;";        
         PreparedStatement ps = null;
         try{
             ps = conec.getConnection().prepareStatement(sql);
-            ps.setInt(1, vo.getId());
-            ps.setString(2, vo.getDescripcion());
-            ps.setDouble(3, vo.getPrecio());
-            ps.setDouble(4, vo.getStock());
+            ps.setInt(4, vo.getId());
+            ps.setString(1, vo.getDescripcion());
+            ps.setDouble(2, vo.getPrecio());
+            ps.setDouble(3, vo.getStock());
             ps.executeUpdate();
         }catch(SQLException ex){
             System.out.println(ex.getMessage());
@@ -95,14 +95,11 @@ public class ProductoDAO{
 /*Metodo Eliminar*/
     public void Eliminar_ProductoVO(ProductoVO vo){
         Conectar conec = new Conectar();
-        String sql = "DELETE FROM tabla WHERE campo1 = ?;";
+        String sql = "DELETE FROM productos WHERE id = ?;";
         PreparedStatement ps = null;
         try{
             ps = conec.getConnection().prepareStatement(sql);
             ps.setInt(1, vo.getId());
-            ps.setString(2, vo.getDescripcion());
-            ps.setDouble(3, vo.getPrecio());
-            ps.setDouble(4, vo.getStock());
             ps.executeUpdate();
         }catch(SQLException ex){
             System.out.println(ex.getMessage());

@@ -8,6 +8,7 @@ package VISTA;
 import DAO.ProductoDAO;
 import Tabla.Tabla_ProductoVO;
 import VO.ProductoVO;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,11 +21,13 @@ public class vistaProductos extends javax.swing.JFrame {
      */
     
     Tabla_ProductoVO t = new Tabla_ProductoVO();
-    
+    private int codProd = 0;
+            
     public vistaProductos() {
         initComponents();
         
         t.visualizar_ProductoVO(jTable1);
+        Limpiar();
     }
 
     /**
@@ -45,6 +48,9 @@ public class vistaProductos extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         btnAgregar = new javax.swing.JToggleButton();
+        btnModificar = new javax.swing.JButton();
+        btnEliminar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,6 +65,11 @@ public class vistaProductos extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         tDescipcion.setText("jTextField1");
@@ -80,6 +91,27 @@ public class vistaProductos extends javax.swing.JFrame {
             }
         });
 
+        btnModificar.setText("Modificar");
+        btnModificar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModificarActionPerformed(evt);
+            }
+        });
+
+        btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+
+        btnLimpiar.setText("Limpiar Campos");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -87,22 +119,28 @@ public class vistaProductos extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tDescipcion, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tStock, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(btnAgregar)))
-                .addContainerGap(130, Short.MAX_VALUE))
+                            .addComponent(tStock, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tDescipcion, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnAgregar)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnModificar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(btnEliminar)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnLimpiar))))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -125,7 +163,13 @@ public class vistaProductos extends javax.swing.JFrame {
                             .addComponent(tStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addGap(18, 18, 18)
-                        .addComponent(btnAgregar)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAgregar)
+                            .addComponent(btnModificar))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnEliminar)
+                            .addComponent(btnLimpiar))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
@@ -146,9 +190,77 @@ public class vistaProductos extends javax.swing.JFrame {
             
             t.visualizar_ProductoVO(jTable1);
         } catch (Exception e) {
-            //muestro mensaje
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERROR AL MODIFICAR", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void Limpiar(){
+        tDescipcion.setText("");
+        tPrecio.setText("");
+        tStock.setText("");
+        tDescipcion.requestFocus();
+        codProd = 0;
+    }
+    
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        Limpiar();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // Al hacer click con el mouse selecciona el producto
+        
+        codProd= (int) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+        tDescipcion.setText((String) jTable1.getValueAt(jTable1.getSelectedRow(), 1));
+        tPrecio.setText(jTable1.getValueAt(jTable1.getSelectedRow(), 2).toString());
+        tStock.setText(jTable1.getValueAt(jTable1.getSelectedRow(), 3).toString());
+                
+        
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+      
+        if(codProd != 0){
+            try {
+                ProductoVO p = new ProductoVO();
+                ProductoDAO dp = new ProductoDAO();
+            
+                p.setId(codProd);
+                p.setDescripcion(tDescipcion.getText());
+                p.setPrecio(Double.parseDouble(tPrecio.getText()));
+                p.setStock(Double.parseDouble(tStock.getText()));
+            
+                dp.Modificar_ProductoVO(p);
+            
+                t.visualizar_ProductoVO(jTable1);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "ERROR AL MODIFICAR", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un producto", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }    
+    }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        
+        if(codProd != 0){
+            try {
+                ProductoVO p = new ProductoVO();
+                ProductoDAO dp = new ProductoDAO();
+            
+                p.setId(codProd);
+            
+                dp.Eliminar_ProductoVO(p);
+            
+                t.visualizar_ProductoVO(jTable1);
+                Limpiar();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(), "ERROR AL Eliminar", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un producto", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }           
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -187,6 +299,9 @@ public class vistaProductos extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton btnAgregar;
+    private javax.swing.JButton btnEliminar;
+    private javax.swing.JButton btnLimpiar;
+    private javax.swing.JButton btnModificar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
